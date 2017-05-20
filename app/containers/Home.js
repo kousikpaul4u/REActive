@@ -3,6 +3,7 @@ import ReactNative from 'react-native';
 import { connect } from 'react-redux';
 import DatePicker from 'react-native-datepicker'
 import moment from 'moment';
+import * as Action from '../actions/recipes';
 
 // import * as homeStyle from '../styles/Home';
 const {
@@ -28,11 +29,8 @@ class Home extends Component {
     }
   }
   searchPressed() {
-    this.setState({ searching: true });
-    this.props.fetchRecipe(moment(new Date(this.state.startDate)).format('MM/DD/YYYY'),
-      moment(new Date(this.state.endDate)).format('MM/DD/YYYY'), this.state.ingredientsInput).then(() => {
-      this.setState({ searching: false });
-    });
+    this.props.dispatch(Action.fetchRecipe(moment(new Date(this.state.startDate)).format('MM/DD/YYYY'),
+      moment(new Date(this.state.endDate)).format('MM/DD/YYYY'), this.state.ingredientsInput));
   }
   recipes() {
     return Object.keys(this.props.searchedRecipes).map(key => this.props.searchedRecipes[key])
@@ -86,12 +84,12 @@ class Home extends Component {
           />
       </View>
       <ScrollView style={homeStyle.scrollSection}>
-        {!this.state.searching && this.recipes().map((recipe) => {
+        {!this.props.isLoader && this.recipes().map((recipe) => {
           return <View key={recipe.caseId}>
             <Text>{recipe.caseId}</Text>
           </View>
         })}
-        { this.state.searching ? <Text>Searching...</Text> : null}
+        { this.props.isLoader ? <Text>Searching...</Text> : null}
       </ScrollView>
     </View>
   }
@@ -107,7 +105,6 @@ const homeStyle = StyleSheet.create({
     borderBottomColor: '#000',
     borderBottomWidth: 1,
     padding: 5,
-    backgroundColor: 'powderblue',
   },
   scrollSection: {
     flex: 0.8,
@@ -118,7 +115,6 @@ const homeStyle = StyleSheet.create({
   },
   searchInput: {
     flex: 0.7,
-    backgroundColor: 'powderblue',
   },
   datePickerView: {
     flex: 0.1,
@@ -127,7 +123,6 @@ const homeStyle = StyleSheet.create({
     borderBottomColor: '#000',
     borderBottomWidth: 1,
     padding: 5,
-    backgroundColor: 'powderblue',
   },
   DatePicker: {
     width: '30%',
@@ -137,6 +132,7 @@ const homeStyle = StyleSheet.create({
 function mapStateToProps(state) {
   return {
     searchedRecipes: state.searchedRecipes,
+    isLoader: state.isLoader ? state.isLoader.loaderStatus : false,
   }
 }
 
