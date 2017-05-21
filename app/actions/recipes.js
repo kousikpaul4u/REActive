@@ -20,10 +20,32 @@ export function fetchRecipe(startDate, endDate, brands) {
   }
 }
 
+export function fetchCaseDetails(caseId, navigation) {
+  return (dispatch, getState) => {
+    dispatch(common.isLoader(true));
+    return Api.get(`http://localhost:8085/caseinformation/find/${caseId}`).then(caseDetails => {
+      console.log(caseDetails);
+      dispatch(setCaseDetails(caseDetails));
+      dispatch(common.isLoader(false));
+      navigation.navigate('Home');
+    }).catch((ex) => {
+      console.log(ex);
+    })
+  }
+}
+
 export function setSearchedRecipes({ recipes }) {
   return {
     type: types.SET_SEARCHED_RECIPES,
     recipes,
+  }
+}
+
+export function setCaseDetails(caseDetails) {
+  return {
+    type: types.SET_SEARCHED_RECIPES,
+    caseId: caseDetails.caseId,
+    caseDetails,
   }
 }
 export function addRecipe() {

@@ -3,17 +3,16 @@ import { connect } from 'react-redux';
 import ReactNative from 'react-native';
 import { bindActionCreators } from 'redux';
 import { ActionCreators } from '../actions';
+import { Container, Content, Button, Text } from 'native-base';
 
 const {
   DatePickerIOS,
   ScrollView,
   View,
-  Text,
   TextInput,
   Image,
   TouchableHighlight,
   StyleSheet,
-  Button,
 } = ReactNative;
 
 class Login extends Component {
@@ -26,18 +25,28 @@ class Login extends Component {
     this.state = {
       username: '',
       password: '',
+      error: false,
+      errorText: '',
     }
+    this.userVerification = this.userVerification.bind(this);
   };
   userVerification() {
     const username = "demo";
-    const password = "demo"
+    const password = "demo";
+    this.setState({
+      error:false,
+      errorText: '',
+    })
     if(this.state.username === username && this.state.password === password) {
-      return true;
+      this.props.navigation.navigate('CaseSearch');
+    } else {
+      this.setState({
+        error:true,
+        errorText: 'Username or Password is incorrect',
+      })
     }
-    return false;
   }
   render() {
-    const { navigate } = this.props.navigation;
     return <View style = {homeStyle.scene}>
     <View style={homeStyle.buttonView} />
     <View style={homeStyle.searchSection}>
@@ -61,12 +70,17 @@ class Login extends Component {
         secureTextEntry={true}
       />
     </View>
-    <View style={homeStyle.buttonView}>
-      <Button
-          onPress={this.userVerification() ?
-          () => navigate('CaseSearch') : ''}
-          title="Login"
-      />
+    <View style={{ flex: 0.2, marginLeft: '20%' }}>
+      { this.state.error ?
+        <Text style={{color: 'red' }}>{this.state.errorText}</Text> : null
+      }
+    </View>
+    <View style={[homeStyle.buttonView, { marginLeft: '40%'}]}>
+      <Button primary
+          onPress={() => this.userVerification()}
+      >
+      <Text>Login</Text>
+      </Button>
     </View>
     <View style={homeStyle.buttonView} />
     <View style={homeStyle.buttonView} />

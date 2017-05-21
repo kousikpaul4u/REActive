@@ -5,7 +5,6 @@ import DatePicker from 'react-native-datepicker'
 import moment from 'moment';
 import * as Action from '../actions/recipes';
 
-// import * as homeStyle from '../styles/Home';
 const {
   DatePickerIOS,
   ScrollView,
@@ -31,6 +30,13 @@ class Home extends Component {
   searchPressed() {
     this.props.dispatch(Action.fetchRecipe(moment(new Date(this.state.startDate)).format('MM/DD/YYYY'),
       moment(new Date(this.state.endDate)).format('MM/DD/YYYY'), this.state.ingredientsInput));
+  }
+  openSelectedCase(caseId) {
+    this.props.dispatch(Action.fetchCaseDetails(caseId,
+      this.props.navigation
+    )).then(resp => {
+      // this.props.navigation.navigate('Home');
+    });
   }
   recipes() {
     return Object.keys(this.props.searchedRecipes).map(key => this.props.searchedRecipes[key])
@@ -85,8 +91,17 @@ class Home extends Component {
       </View>
       <ScrollView style={homeStyle.scrollSection}>
         {!this.props.isLoader && this.recipes().map((recipe) => {
-          return <View key={recipe.caseId}>
-            <Text>{recipe.caseId}</Text>
+          return <View key={recipe.caseId} style={{
+            marginTop: 10,
+          }}>
+            <TouchableHighlight
+              onPress={() => this.openSelectedCase(recipe.caseId)}
+              style={homeStyle.touchableHighlight}
+            >
+              <Text style={homeStyle.textSearchedCase}>
+                {recipe.caseId}
+              </Text>
+            </TouchableHighlight>
           </View>
         })}
         { this.props.isLoader ? <Text>Searching...</Text> : null}
@@ -127,6 +142,14 @@ const homeStyle = StyleSheet.create({
   DatePicker: {
     width: '30%',
   },
+  textSearchedCase: {
+    fontSize: 20,
+    textAlign: 'center',
+    padding: 5,
+    borderColor: '#0b7d8e',
+    borderWidth: 3,
+    borderRadius: 10,
+  }
 });
 
 function mapStateToProps(state) {

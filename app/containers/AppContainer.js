@@ -5,19 +5,25 @@ import { bindActionCreators } from 'redux';
 import { StackNavigator } from 'react-navigation';
 import Home from './Home';
 import Login from './Login';
-
-// class AppContainer extends Component {
-//   render() {
-//     return <Home {...this.props} />
-//   }
-// }
+import CaseDetails from './caseDetails';
 
 const AppContainer = StackNavigator({
-  Home: { screen: Login },
+  Home: {
+    screen: Login,
+    navigationOptions: ({navigation}) => ({
+      title: 'Login',
+    }),
+  },
   CaseSearch: {
     screen: Home,
     navigationOptions: ({navigation}) => ({
       title: 'Case Search',
+    }),
+  },
+  CaseDetails: {
+    screen: Home,
+    navigationOptions: ({navigation}) => ({
+      title: 'Case Details',
     }),
   },
 });
