@@ -1,4 +1,11 @@
-# ReactNativeDemo
+# REActive is a ReactNativeDemo Mobile Application
+Features Used:
+1. React with Redux Complete Folder Structure
+2. Navigations
+3. Log in Screen
+4. API Integration
+
+
 For MAC 
 Node, Watchman 
 We recommend installing Node and Watchman using Homebrew. Run the following commands in a Terminal after installing Homebrew:
